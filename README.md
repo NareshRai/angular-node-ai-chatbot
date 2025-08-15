@@ -13,7 +13,7 @@ A full-stack AI-powered chatbot built using **Angular** for the frontend, **Node
 
 ## 🖼 Demo
 
-_(Add screenshots or a GIF here if available)_
+<img width="1491" height="757" alt="image" src="https://github.com/user-attachments/assets/e0b6fedd-2e8b-431f-824a-501b1fcd9ce6" />
 
 ---
 
