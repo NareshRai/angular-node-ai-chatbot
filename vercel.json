@@ -2,10 +2,10 @@
   "version": 1,
   "builds": [
     { "src": "angular.json", "use": "@vercel/static-build" },
-    { "src": "backend/api/**/*.js", "use": "@vercel/node" }
+    { "src": "backend/**/*.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "backend/api/$1.js" },
+    { "src": "/(.*)", "dest": "backend/$1.js" },
     { "src": "/(.*)", "dest": "dist/angular-node-ai-chatbot/$1" }
   ]
 }
