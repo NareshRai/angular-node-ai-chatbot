@@ -1,0 +1,590 @@
+// === Variables ===
+$gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-ai: linear-gradient(135deg, #7B1FA2 0%, #6A1B9A 100%);
+$white-blur-bg: rgba(255, 255, 255, 0.1);
+$text-white: rgba(255, 255, 255, 0.9);
+$text-muted: #666;
+$text-dark: #333;
+$blur-light: blur(10px);
+$blur-heavy: blur(20px);
+
+// === Animations ===
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes thinking {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+// === Mixins ===
+@mixin glass-bg($blur: $blur-light, $bg: $white-blur-bg) {
+    backdrop-filter: $blur;
+    background: $bg;
+}
+
+@mixin gradient-bg($gradient) {
+    background: $gradient;
+}
+
+// === Layout ===
+.split-container {
+    display: flex;
+    height: 100vh;
+    @include gradient-bg($gradient-main);
+}
+
+.user-section,
+.ai-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-section {
+    border-right: 2px solid rgba(255, 255, 255, 0.3);
+    @include gradient-bg($gradient-main);
+}
+
+.chatbot-container,
+.ai-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+// === Header ===
+.header {
+    color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-height: 80px;
+    padding: 0 24px;
+
+    &.user-header {
+        @include gradient-bg($gradient-main);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+            pointer-events: none;
+        }
+    }
+
+    &.ai-header {
+        @include gradient-bg($gradient-ai);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .logo {
+        border-radius: 50%;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @include glass-bg($blur-heavy);
+
+        &.user-logo {
+            @include glass-bg($blur-heavy, linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1)));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        &.ai-logo {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        mat-icon {
+            font-size: 32px;
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+    }
+
+    .app-title {
+        font-size: 24px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        @include glass-bg($blur-heavy);
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            background: #4CAF50;
+
+            &.inactive {
+                background: #FF5722;
+                box-shadow: 0 0 10px rgba(255, 87, 34, 0.5);
+            }
+
+            &.ai-dot {
+                background: #FF9800;
+            }
+        }
+
+        .status-text {
+            font-size: 14px;
+            color: $text-white;
+        }
+    }
+
+    .message-counter {
+        @include glass-bg;
+        padding: 6px 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+
+        .counter-text {
+            font-size: 12px;
+            color: $text-white;
+            font-weight: 500;
+        }
+    }
+}
+
+// === Messages ===
+.chat-messages,
+.ai-thoughts {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: transparent;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    }
+}
+
+.message-wrapper {
+    margin-bottom: 16px;
+    animation: fadeIn 0.3s ease-in;
+
+    .message-content {
+        display: flex;
+    }
+
+    &.user-message .message-content {
+        justify-content: flex-end;
+    }
+
+    &.bot-message .message-content {
+        justify-content: flex-start;
+    }
+
+    .message-bubble {
+        max-width: 80%;
+        padding: 16px 20px;
+        border-radius: 20px;
+        word-wrap: break-word;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+        .message-text {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+    }
+
+    &.user-message .message-bubble {
+        @include gradient-bg($gradient-main);
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-bottom-right-radius: 8px;
+
+        .message-time {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
+
+    &.bot-message .message-bubble {
+        background: white;
+        color: $text-dark;
+        border-bottom-left-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+
+        .message-time {
+            color: $text-muted;
+        }
+    }
+}
+
+// === Input Area ===
+.input-area {
+    padding: 20px;
+    background: transparent;
+
+    .input-card {
+        padding: 16px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        @include glass-bg($blur-heavy, rgba(255, 255, 255, 0.95));
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .input-container {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+
+        .message-input {
+            flex: 1;
+
+            .mat-mdc-form-field-wrapper {
+                padding-bottom: 0;
+            }
+        }
+
+        .send-button {
+            @include gradient-bg($gradient-main);
+            border: none;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            &:hover:not(:disabled)::before {
+                left: 100%;
+            }
+
+            &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+            }
+
+            &:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+// === Thoughts, Stats, Typing ===
+.ai-thoughts,
+.ai-stats {
+    padding: 20px;
+}
+
+// /* AI Stats Panel */
+
+.stats-card {
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7B1FA2;
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    padding: 16px;
+    @include glass-bg;
+    border-radius: 12px;
+
+    mat-icon {
+        color: #FFD700;
+    }
+}
+
+.thought-item {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+
+    &.thinking {
+        border: 2px dashed #7B1FA2;
+        background: rgba(123, 31, 162, 0.05);
+    }
+
+    .thought-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .thought-number {
+            background: $gradient-ai;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .thought-timestamp {
+            font-size: 12px;
+            color: $text-muted;
+        }
+    }
+
+    .thought-content {
+        color: $text-dark;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .thinking-text {
+        color: #7B1FA2;
+        font-style: italic;
+    }
+
+    .ai-thinking-dots {
+        display: inline-flex;
+        gap: 4px;
+        margin-right: 8px;
+
+        span {
+            width: 6px;
+            height: 6px;
+            background: #7B1FA2;
+            border-radius: 50%;
+            animation: thinking 1.4s infinite ease-in-out;
+
+            &:nth-child(1) {
+                animation-delay: -0.32s;
+            }
+
+            &:nth-child(2) {
+                animation-delay: -0.16s;
+            }
+        }
+    }
+}
+
+.typing-indicator {
+    padding: 16px 20px !important;
+
+    .typing-dots {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+
+        span {
+            width: 8px;
+            height: 8px;
+            background: #666;
+            border-radius: 50%;
+            animation: thinking 1.4s infinite ease-in-out;
+
+            &:nth-child(1) {
+                animation-delay: -0.32s;
+            }
+
+            &:nth-child(2) {
+                animation-delay: -0.16s;
+            }
+        }
+    }
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7B1FA2;
+    margin-bottom: 4px;
+}
+
+// === Responsive ===
+@media (max-width: 1024px) {
+    .split-container {
+        flex-direction: column;
+    }
+
+    .user-section {
+        border-right: none;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .user-section,
+    .ai-section {
+        height: 50vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 0 16px;
+        min-height: 60px;
+
+        .app-title {
+            font-size: 18px;
+        }
+
+        .logo mat-icon {
+            font-size: 24px;
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .chat-messages,
+    .ai-thoughts {
+        padding: 16px;
+    }
+
+    .message-bubble {
+        max-width: 90%;
+        padding: 12px 16px;
+    }
+
+    .input-area,
+    .ai-stats {
+        padding: 16px;
+
+        .input-card,
+        .stats-card {
+            padding: 12px;
+        }
+    }
+
+    .status-indicator {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+
+        .stat-value {
+            font-size: 18px;
+        }
+    }
+}

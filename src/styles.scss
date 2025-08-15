@@ -1,0 +1,65 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+/* Material Design Overrides */
+.mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
+    color: rgba(0, 0, 0, 0.12);
+}
+
+.mat-mdc-form-field-appearance-outline.mat-focused .mat-mdc-form-field-outline-thick {
+    color: #667eea;
+}
+
+.mat-mdc-form-field-appearance-outline .mat-mdc-form-field-label {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.mat-mdc-form-field-appearance-outline.mat-focused .mat-mdc-form-field-label {
+    color: #667eea;
+}
+
+.mat-mdc-input-element {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.mat-mdc-input-element::placeholder {
+    color: rgba(0, 0, 0, 0.42);
+}
+
+/* Custom Material Button Styles */
+.mat-mdc-fab.mat-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.mat-mdc-fab.mat-primary:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}

@@ -1,0 +1,180 @@
+<div class="split-container">
+  <!-- User Chat Section -->
+  <div class="user-section">
+    <div class="chatbot-container">
+      <!-- User Header -->
+      <mat-toolbar class="header user-header">
+        <div class="header-content">
+          <div class="logo-section">
+            <div class="logo user-logo">
+              <mat-icon>person</mat-icon>
+            </div>
+            <span class="app-title">{{ userTitle }}</span>
+          </div>
+          <div class="status-indicator">
+            <span
+              class="status-dot"
+              [class.inactive]="userStatus === 'Inactive'"
+            ></span>
+            <span class="status-text">{{ userStatus }}</span>
+          </div>
+        </div>
+
+        <div class="message-counter">
+          <span class="counter-text" *ngIf="messageLimit > messages.length"
+            >{{ messages.length }} messages</span
+          >
+        </div>
+      </mat-toolbar>
+
+      <!-- User Chat Messages Area -->
+      <div class="chat-messages" #chatMessages>
+        <div class="messages-container">
+          <div
+            *ngFor="let message of messages; trackBy: trackByMessage"
+            class="message-wrapper"
+            [class.user-message]="message.isUser"
+            [class.bot-message]="!message.isUser"
+          >
+            <div class="message-content">
+              <div class="message-bubble">
+                <div class="message-text">{{ message.text }}</div>
+                <div class="message-time">
+                  {{ message.timestamp | date : "short" }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Typing Indicator -->
+          <div *ngIf="isTyping" class="message-wrapper bot-message">
+            <div class="message-content">
+              <div class="message-bubble typing-indicator">
+                <div class="typing-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <mat-card class="input-card">
+          <div class="input-container" *ngIf="messageLimit > messages.length">
+            <mat-form-field class="message-input" appearance="outline">
+              <mat-label>Type your message...</mat-label>
+              <input
+                matInput
+                [(ngModel)]="currentMessage"
+                (keypress)="onKeyPress($event)"
+                placeholder="Ask me anything..."
+                autocomplete="off"
+              />
+            </mat-form-field>
+
+            <button
+              mat-fab
+              color="primary"
+              class="send-button"
+              (click)="sendMessage()"
+              [disabled]="!currentMessage.trim()"
+            >
+              <mat-icon>send</mat-icon>
+            </button>
+          </div>
+          <div class="input-container" *ngIf="messages.length > messageLimit">
+            <span>Message limit of 10 has been reached.</span>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Perspective Section -->
+  <div class="ai-section">
+    <div class="ai-container">
+      <!-- AI Header -->
+      <mat-toolbar class="header ai-header">
+        <div class="header-content">
+          <div class="logo-section">
+            <div class="logo ai-logo">
+              <mat-icon>psychology</mat-icon>
+            </div>
+            <span class="app-title">{{ aiTitle }}</span>
+          </div>
+          <div class="status-indicator ai-status">
+            <span class="status-dot ai-dot"></span>
+            <span class="status-text">Processing</span>
+          </div>
+        </div>
+      </mat-toolbar>
+
+      <!-- AI Thoughts Area -->
+      <div class="ai-thoughts">
+        <div class="thoughts-container">
+          <div class="section-title">
+            <mat-icon>lightbulb</mat-icon>
+            <span>AI Thought Process</span>
+          </div>
+
+          <div
+            *ngFor="let thought of aiThoughts; let i = index"
+            class="thought-item"
+          >
+            <div class="thought-header">
+              <span class="thought-number">{{ i + 1 }}</span>
+              <span class="thought-timestamp">{{
+                thought.timestamp | date : "short"
+              }}</span>
+            </div>
+            <div class="thought-content">{{ thought.text }}</div>
+          </div>
+
+          <!-- AI Thinking Indicator -->
+          <div *ngIf="isAiThinking" class="thought-item thinking">
+            <div class="thought-header">
+              <span class="thought-number">{{ aiThoughts.length + 1 }}</span>
+              <span class="thought-timestamp">Processing...</span>
+            </div>
+            <div class="thought-content">
+              <div class="ai-thinking-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span class="thinking-text"
+                >Analyzing input and generating response...</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Stats Panel -->
+      <div class="ai-stats">
+        <mat-card class="stats-card">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-value">{{ messages.length }}</div>
+              <div class="stat-label">Messages</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">{{ aiThoughts.length }}</div>
+              <div class="stat-label">Thoughts</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">
+                {{ isAiThinking ? "Active" : "Idle" }}
+              </div>
+              <div class="stat-label">Status</div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
